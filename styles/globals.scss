@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  &:before{
+    content:'';
+    content: "";
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+.text-shadow{
+  text-shadow: 0px 2px 0px rgb(0 0 0 / 30%);
+}
+
+.adjacent-post{
+  & .arrow-btn{
+    transition: width 300ms ease;
+    width: 50px;
+  }
+  &:hover{
+    & .arrow-btn{
+      width: 60px;
+    }
+  }
+}
+
+.react-multi-carousel-list {
+  & .arrow-btn{
+    transition: width 300ms ease;
+    width: 50px;
+    &:hover{
+      width: 60px;
+    }
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@layer base {
+  :root {
+      --color-base-100: #d1fae5;
+      --color-base-200: #bbf7d0;
+      --color-base-300: #a7f3d0;
+      --color-base-400: #4ade80;
+      --color-base-500: #34d399;
+      --color-base-600: #22c55e;
+      --color-base-700: #16a34a;
+      --color-base-800: #10b981;
+      --color-base-900: #059669;
+      --color-base-primary: #34d399;
+      --color-base-secondary: #FFFFFF;
+      --color-base-success: #5cb85c;
+      --color-base-danger: #d9534f;
+      --color-base-warning: #f0ad4e;
+      --color-base-info: #5bc0de;
+      --color-base-muted: #f7f7f7;
+      --color-base-border: #e5e7eb;
+  }
+
+  .burgundy-theme {
+      --color-base-100: #FEF3C7;
+      --color-base-200: #FDE68A;
+      --color-base-300: #FCD34D;
+      --color-base-400: #FBBF24;
+      --color-base-500: #F59E0B;
+      --color-base-600: #D97706;
+      --color-base-700: #B45309;
+      --color-base-800: #B45309;
+      --color-base-900: #B45309;
+      --color-base-primary: #B45309;
+      --color-base-secondary: #B45309;
+      --color-base-success: #5cb85c;
+      --color-base-danger: #d9534f;
+      --color-base-warning: #f0ad4e;
+      --color-base-info: #5bc0de;
+      --color-base-muted: #f7f7f7;
+      --color-base-border: #e5e7eb;
+  }
+}
