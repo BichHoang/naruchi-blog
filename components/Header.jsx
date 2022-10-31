@@ -3,6 +3,7 @@ import useTrans from '../hooks/useTrans';
 import { useRouter } from "next/router";
 import Link from 'next/link';
 import { getCategories } from '../services';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
   const trans = useTrans();
@@ -11,6 +12,7 @@ const Header = () => {
   const [mobileClass, setmobileClass] = useState("hidden");
   const router = useRouter();
   const [keyword, setKeyword] = useState("");
+  const categoryCurrentSlug = useSelector((state) => state.common.categoryCurrentSlug);
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -49,7 +51,7 @@ const Header = () => {
       <div className="container flex flex-wrap justify-between items-center mx-auto px-10">
         <a href={appUrl} className="flex items-center hover:cursor-pointer">
           <img src="/logo.png" className="mr-3 h-6 sm:h-9" alt="Juneyai Logo" />
-          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             { trans.website.webname }
           </span>
         </a>
@@ -70,9 +72,8 @@ const Header = () => {
               </svg>
               <span className="sr-only">{ trans.common.searchIcon }</span>
             </div>
-            <form onSubmit={ searchPosts } className="block pl-10 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <input value={ keyword } onChange={onInputChange} className="p-2 w-full bg-gray-50 rounded-lg sm:text-sm" type="text" id="search-navbar" placeholder={ trans.placeholder.search } />
-              <button type="submit"></button>
+            <form onSubmit={ searchPosts } >
+              <input value={ keyword } onChange={onInputChange} type="text" id="search-navbar" className="block p-2 pl-10 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={ trans.placeholder.search } />
             </form>
           </div>
           <button onClick={ toggleMobileMenu } data-collapse-toggle="navbar-search" type="button" className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-search" aria-expanded="false">
@@ -91,9 +92,13 @@ const Header = () => {
           </div>
           <div className="flex flex-col text-right md:float-left md:contents uppercase">
             { categories.map((category, index) => (
-                <Link key={index} href={`/category/${category.slug}`}><span className="md:float-right mt-2 align-middle text-black ml-4 font-semibold cursor-pointer">{category.name}</span></Link>
+                <Link key={index} href={`/category/${category.slug}`}>
+                  <span className={`md:float-right mt-2 ${(categoryCurrentSlug === category.slug) ? 'text-base-600' : 'text-black'} mr-6 font-semibold cursor-pointer dark:text-white`}>
+                    {category.name}
+                  </span>
+                </Link>
             ))}
-            <Link href="/about"><span className="md:float-right mt-2 align-middle text-black ml-4 font-semibold cursor-pointer">{ trans.menu.about }</span></Link>
+            <Link href="/about"><span className="md:float-right mt-2 align-middle text-black font-semibold cursor-pointer">{ trans.menu.about }</span></Link>
           </div>
         </div>
       </div>

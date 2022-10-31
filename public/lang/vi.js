@@ -3,24 +3,24 @@ export default {
         webname: "Juneyai",
     },
     menu: {
-        about: "About me",
-        contact: "Contact",
+        about: "Giới thiệu",
+        contact: "Liên hệ",
     },
     title: {
-        recentPosts: "Recent Posts",
-        categories: "Categories",
-        comments: "Comments",
-        contact: "Contact",
+        recentPosts: "Các bài viết gần đây",
+        categories: "Danh mục",
+        comments: "Bình luận",
+        contact: "Liên hệ",
     },
     common: {
-        search: "Search",
+        search: "Tìm kiếm",
         searchIcon: "Search icon",
         openMenu: "Open menu",
     },
     placeholder: {
-        search: "Search...",
+        search: "Tìm kiếm...",
     },
     button: {
-        continueReading: "Continue Reading",
+        continueReading: "Đọc tiếp",
     },
 }

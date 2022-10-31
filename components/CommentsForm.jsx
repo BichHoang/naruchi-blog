@@ -17,6 +17,7 @@ const CommentsForm = ({ slug }) => {
     const initalFormData = {
       username: window.localStorage.getItem('username'),
       email: window.localStorage.getItem('email'),
+      content: '',
       storeData: window.localStorage.getItem('username') || window.localStorage.getItem('email'),
     };
     setFormData(initalFormData);
@@ -81,7 +82,10 @@ const CommentsForm = ({ slug }) => {
                 })
               }
               setFormData({
+                username: localStorage.getItem('username'),
+                email: localStorage.getItem('email'),
                 content: '',
+                storeData: storeData,
               })
             })
             .catch(() => {
@@ -101,9 +105,9 @@ const CommentsForm = ({ slug }) => {
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 pb-12 mb-8">
-      <h3 className="text-xl mb-8 font-semibold border-b pb-4">Leave a Reply</h3>
+      <h3 className="text-xl mb-8 font-semibold border-b pb-4">Để lại bình luận</h3>
       <div className="grid grid-cols-1 gap-4 mb-4">
-        <textarea value={formData.content} onChange={onInputChange} className="p-4 outline-none w-full rounded-lg h-40 focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700" name="content" placeholder="Comment" />
+        <textarea value={formData.content} onChange={onInputChange} className="p-4 outline-none w-full rounded-lg h-40 focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700" name="content" placeholder="Bình luận..." />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <input type="text" value={formData.username} onChange={onInputChange} className="py-2 px-4 outline-none w-full rounded-lg focus:ring-2 focus:ring-gray-200 bg-gray-100 text-gray-700" placeholder="Name" name="username" />
@@ -112,13 +116,12 @@ const CommentsForm = ({ slug }) => {
       <div className="grid grid-cols-1 gap-4 mb-4">
         <div>
           <input checked={formData.storeData} onChange={onInputChange} type="checkbox" id="storeData" name="storeData" value="true" />
-          <label className="text-gray-500 cursor-pointer" htmlFor="storeData"> Save my name, email in this browser for the next time I comment.</label>
+          <label className="text-gray-500 cursor-pointer" htmlFor="storeData"> Lưu lại tên và mail cho lần bình luận tiếp theo.</label>
         </div>
       </div>
       {error && <p className="text-xs text-red-500">{message}</p>}
       <div className="mt-8 flex justify-end">
-        <button type="button" onClick={handlePostSubmission} className="transition duration-500 ease hover:bg-indigo-900 inline-block bg-base-600 text-lg font-medium rounded-full text-white px-8 py-3 cursor-pointer">Post Comment</button>
-        {showSuccessMessage && <span className="text-xl float-right font-semibold mt-3 text-green-500">Comment submitted for review</span>}
+        <button type="button" onClick={handlePostSubmission} className="transition duration-500 ease hover:bg-indigo-900 inline-block bg-base-600 text-lg font-medium rounded-full text-white px-8 py-3 cursor-pointer">Bình luận</button>
       </div>
     </div>
   );

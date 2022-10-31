@@ -86,6 +86,7 @@ export const getPostDetails = async (slug) => {
         content {
           raw
         }
+        id
         score
         views
         createdAt
@@ -135,7 +136,7 @@ export const getSimilarPosts = async (categories, slug) => {
   `;
   const result = await request(graphqlAPI, query, { slug, categories });
 
-  return result.categories[0].posts;
+  return result.length ?  result.categories[0].posts : [];
 };
 
 export const getPostsSameAuthor = async (authorId) => {
@@ -167,11 +168,11 @@ export const getPostsSameAuthor = async (authorId) => {
   return result || [];
 }
 
-export const getPostsSameSeries = async (id, parentId) => {
+export const getPostsSameSeries = async (selfId,id, parentId) => {
   const query = gql`
-  query getPostsSameSeries($id: ID, $parentId: String) {
+  query getPostsSameSeries($id: ID, $selfId: ID, $parentId: String) {
     posts(where: {
-      OR: [{ id: $id }, { parentId: $parentId }]
+      OR: [{ id: $id }, { parentId: $parentId }], NOT: {id: $selfId}
     }) {
       slug
       title
@@ -190,41 +191,63 @@ export const getPostsSameSeries = async (id, parentId) => {
       }
     }
   }`
-  const response = await request(graphqlAPI, query, { id, parentId });
+  const response = await request(graphqlAPI, query, { selfId, id, parentId });
   const result = response.posts;
 
   return result || [];
 }
 
-export const getCategoryPost = async (slug) => {
+export const getCategoryPost = async (slug, first, skip) => {
   const query = gql`
-  query getCategoryPost($slug:String!) {
-    category(where: {slug: $slug}) {
-      posts {
-        slug
-        title
-        description
-        createdAt
-        views
-        author {
-          ... on Author {
-            id
-            name
-            avatar {
-              url
-            }
+  query getCategoryPost($slug:String, $first: Int, $skip: Int) {
+    posts(
+      where: {categories_every: {slug: $slug}}
+      orderBy: publishedAt_DESC
+      first: $first
+      skip: $skip
+    ) {
+      author {
+        ... on Author {
+          id
+          name
+          avatar {
+            url
           }
         }
-        featuredImage {
-          url
+      }
+      categories {
+        ... on Category {
+          id
+          name
+          slug
         }
+      }
+      isShowFeaturedImage
+      description
+      slug
+      title
+      content {
+        raw
+      }
+      id
+      score
+      views
+      createdAt
+      parentId
+      featuredImage {
+        url
+      }
+    }
+    postsConnection(where: {categories_every: {slug: $slug}}) {
+      aggregate {
+        count
       }
     }
   }`;
 
-  const result = await request(graphqlAPI, query, { slug });
+  const result = await request(graphqlAPI, query, { slug, first, skip });
 
-  return result.category.posts;
+  return [result.posts, result.postsConnection.aggregate.count];
 };
 
 export const getFeaturedPosts = async () => {
@@ -355,36 +378,42 @@ export const getAboutMe = async () => {
   return result.aboutMes[0];
 };
 
-export const searchPosts = async (keyword) => {
+export const searchPosts = async (keyword, first, skip) => {
   const query = gql`
-  query searchPosts($keyword: String) {
-    posts(where: {OR: [
-      {title_contains: $keyword}, 
-      {slug_contains: $keyword}, 
-      {description_contains: $keyword}
-    ]}) {
+  query searchPosts($keyword: String, $first: Int, $skip: Int) {
+    posts(
+      where: {OR: [{title_contains: $keyword}, {slug_contains: $keyword}, {description_contains: $keyword}]}
+      orderBy: publishedAt_DESC
+      first: $first
+      skip: $skip
+    ) {
       slug
-        title
-        description
-        createdAt
-        views
-        author {
-          ... on Author {
-            id
-            name
-            avatar {
-              url
-            }
+      title
+      description
+      createdAt
+      views
+      author {
+        ... on Author {
+          id
+          name
+          avatar {
+            url
           }
         }
-        featuredImage {
-          url
-        }
+      }
+      featuredImage {
+        url
+      }
+    }
+    postsConnection {
+      aggregate {
+        count
+      }
     }
   }
 `;
 
-const result = await request(graphqlAPI, query, { keyword });
+const result = await request(graphqlAPI, query, { keyword, first, skip });
 
-return result.posts;
+return [result.posts, result.postsConnection.aggregate.count];
 };

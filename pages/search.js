@@ -3,18 +3,25 @@ import { grpahCMSImageLoader } from '../util';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { searchPosts } from '../services/index';
-import { Categories, Loader } from '../components';
+import { Categories, Loader, Pagination } from '../components';
 import moment from 'moment';
 
 const Search = () => {
   const router = useRouter();
   const [posts, setPosts] = useState([]);
+  const perPage = 5;
+  const [totalItems, setTotalItems] = useState(1);
+  const currentPage = router.query.page || 1;
+  const keyword = router.query.keyword;
 
   useEffect(() => {
-    searchPosts(router.query.keyword).then((result) => {
-      setPosts(result);
+    searchPosts(keyword, perPage, (currentPage - 1) * perPage)
+      .then((result) => {
+        const [posts, totalItems] = result;
+        setPosts(posts);
+        setTotalItems(totalItems);
     });
-  }, [router.query.keyword]);
+  }, [keyword, currentPage]);
 
   if (router.isFallback) {
     return <Loader />;
@@ -55,6 +62,7 @@ const Search = () => {
                 </div>
               </a>
             ))}
+            <Pagination totalItems={totalItems} currentPage={currentPage} pageUrl={`/search?keyword=${keyword}&page=`} perPage={perPage} />
           </div>
           : <div className="col-span-1 lg:col-span-8">
             <h2 className="text-center mt-10">Không tìm thấy bài viết nào</h2>
